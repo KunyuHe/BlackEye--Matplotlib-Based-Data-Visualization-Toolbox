@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
+
 from utils import create_font_setting
 
 PATH = "../palettes/"
@@ -19,9 +20,9 @@ class Palette:
         self.cmap = None
         self.type = None
 
-    def getPallete(self, name):
+    def getPallete(self, name, path=PATH):
         # Check if there is a palette with the specified name
-        path = os.path.join(PATH, name + ".json")
+        path = os.path.join(path, name + ".json")
         if not os.path.isfile(path):
             raise FileNotFoundError("Cannot find palette named '%s'." % name)
 
