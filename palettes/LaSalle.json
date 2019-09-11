@@ -1,0 +1,19 @@
+{
+    "colors": {
+        "LaSalle_Blue": "#00245D",
+        "Bright_Blue": "#46B3D1",
+        "Tan": "#CFCABD",
+        "Gold": "#A48D68",
+        "Purple": "#682968",
+        "Green": "#84A86D",
+        "Yellow": "#E6A13D",
+        "RED": "#D9494C"
+    },
+    "pair": ["#00245D", "#A48D68"],
+
+    "n": 7,
+    "type": "qualitative",
+
+    "Owner": "LaSalle Investment Management",
+    "Adaptor": "Kunyu He"
+}
