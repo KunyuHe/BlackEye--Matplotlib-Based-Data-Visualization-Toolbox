@@ -21,14 +21,38 @@ def dendro(ax, dist, cut=None,
     and each xtick labelled (even colored if there is a target variable). Also
     enables adding legend for each cluster and the color codes if applicable.
 
-    :param ax:
-    :param dist:
-    :param cut:
-    :param labels:
-    :param leaf_rotation:
-    :param leaf_font_size:
-    :param sorting:
-    :return:
+    Inputs:
+        - ax (Axes): canvas
+        - dist (ndArray): the hierarchical clustering encoded as a linkage
+            matrix
+        - cut (float): height at which to cut the tree
+        - labels (Pandas.Index): index to use for xtick labels
+        - root (str): plots the root at the top with "top", and left with "left"
+        - leaf_rotation (float): the angle (in degrees) to rotate the leaf
+            labels
+        - leaf_font_size (float): the font size (in points) of the leaf labels
+        - sorting (str): for each node n, the order (visually, from
+            left-to-right) n’s two descendent links are plotted is determined
+            either by number of objects in its cluster descending, or by
+            distance between its direct descendents descending
+        - palette_name (str): user-defined palette name for 'Palette' class,
+            find more in the 'palette' module
+        - cluster_colors (bool): whether to use default or user-defined clusters
+            coloring palette
+        - legend_loc (str): location for the cluster legend, consistent with
+            Matplotlib legend location definitions
+        - label_colors (bool): if there is a established target variable,
+            whether to color xtick labels according to that variable
+        - label_color_map (Pandas.Series): target column if there is an
+            established target variable (supervised)
+        - label_title (str): title of the label coloring legend, using target
+            column name is recommended
+        - labs ((str, str, str)): title, x-axis label, y-axis label
+        - font_size ((int, int, int)): title, axis label, tick label font
+            properties
+
+    Returns:
+        ([[int]]) cluster output as color-coded by the dendrogram
     """
     palette = Palette().getPallete(palette_name, path="../../../palettes/")
     title_font, axis_font, ticks_font = create_font_setting(font_size)
@@ -57,10 +81,10 @@ def dendro(ax, dist, cut=None,
     for color in den['color_list']:
         if color != "grey" and color not in cluster_colors:
             cluster_colors.append(color)
-    ax.legend([Line2D([0], [0], color=c, lw=6) for c in cluster_colors],
-              ['Cluster %s' % i for i in range(len(cluster_colors))],
-              prop=axis_font,
-              loc=legend_loc, shadow=False)
+    c_leg = ax.legend([Line2D([0], [0], color=c, lw=6) for c in cluster_colors],
+                      ['Cluster %s' % i for i in range(len(cluster_colors))],
+                      prop=axis_font,
+                      loc=legend_loc, shadow=False)
 
     # Get color-coded clusters
     color_cluster = {col: cluster for cluster, col in enumerate(cluster_colors)}
@@ -82,7 +106,7 @@ def dendro(ax, dist, cut=None,
         for lbl in ax.get_xmajorticklabels():
             lbl.set_color(label_color_dict[label_color_map[lbl.get_text()]])
         box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width*0.95, box.height])
+        ax.set_position([box.x0, box.y0, box.width*0.8, box.height])
 
         leg = ax.legend([Line2D([0], [0], color='white', lw=0)
                          for _ in range(len(targets)+1)],
@@ -92,6 +116,7 @@ def dendro(ax, dist, cut=None,
         for i, text in enumerate(leg.get_texts()[1:]):
             text.set_color(label_colors[i])
             text.set_ha('center')
+        ax.add_artist(c_leg)
 
     # Plot cut
     if cut:
@@ -140,9 +165,9 @@ if __name__ == "__main__":
                       root="top", leaf_rotation=90, leaf_font_size=10,
                       sorting="distance", palette_name="LaSalle",
                       cluster_colors=True, label_colors=True,
-                      label_color_map=sample[target],
+                      label_color_map=sample[target], label_title=target,
                       labs=(
                           "Clustering on $mpg$ Data Subsample", "Ward Distance",
                           "Car Model"))
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0, 0.9, 1])
     fig.savefig("./samples/dendro_sample.png")
