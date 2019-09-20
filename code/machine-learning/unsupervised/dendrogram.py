@@ -4,6 +4,7 @@ sys.path.append("../../")
 
 from palette import Palette
 from utils import create_font_setting
+from title_axislabels import labelTitleAxis
 from scipy.cluster.hierarchy import dendrogram, set_link_color_palette
 from matplotlib.lines import Line2D
 
@@ -88,10 +89,11 @@ def dendro(ax, dist, cut=None,
 
     # Get color-coded clusters
     color_cluster = {col: cluster for cluster, col in enumerate(cluster_colors)}
+    col_lst = [den['color_list'][i-1] if col == "grey" else col
+               for i, col in enumerate(den['color_list'])]
     clusters = [[row[1]] for row in
                 sorted(zip(den['leaves'],
-                           [color_cluster[col] for col in
-                            den['color_list'][:-2]]),
+                           [color_cluster[col] for col in col_lst]),
                        key=lambda x: x[0])]
 
     # Color the labels by target if applicable
@@ -115,7 +117,7 @@ def dendro(ax, dist, cut=None,
                         prop=axis_font)
         for i, text in enumerate(leg.get_texts()[1:]):
             text.set_color(label_colors[i])
-            text.set_ha('center')
+            text.set_ha('left')
         ax.add_artist(c_leg)
 
     # Plot cut
@@ -130,10 +132,7 @@ def dendro(ax, dist, cut=None,
     ax.set_yticklabels(ax.get_yticks(), fontproperties=ticks_font)
     ax.tick_params(axis='y', direction='in')
 
-    title, ylab, xlab = labs
-    ax.set_title(title, fontproperties=title_font)
-    ax.set_ylabel(ylab, fontproperties=axis_font)
-    ax.set_xlabel(xlab, fontproperties=axis_font)
+    labelTitleAxis(ax, labs, font_size)
 
     return clusters
 
