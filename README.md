@@ -27,7 +27,7 @@ In short, **`DarkEyes` is a `Matplotlib`-based visualization toolbox that serves
 
 ### 2. Use Cases
 
-| Name       | Short Description                                            | Sample                                                       |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Dendrogram | Dendrogram serves to show the results of hierarchical clustering. It illustrates the arrangement of the clusters visually. | ![]codes/machine-learning/unsupervised/samples/dendro_sample.png |
+| Name                                          | Sample                                                       |
+| --------------------------------------------- | ------------------------------------------------------------ |
+| [**Dendrogram**](documentation/Dendrogram.md) | ![](code/machine-learning/unsupervised/samples/dendro_sample.png) |
 
