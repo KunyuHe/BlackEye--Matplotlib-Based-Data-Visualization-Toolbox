@@ -4,6 +4,8 @@ sys.path.append("../../")
 
 from palette import Palette
 from utils import create_font_setting
+from data import get_mpg
+from title_axislabels import labelTitleAxis
 from scipy.cluster.hierarchy import dendrogram, set_link_color_palette
 from matplotlib.lines import Line2D
 
@@ -55,7 +57,7 @@ def dendro(ax, dist, cut=None,
         ([[int]]) cluster output as color-coded by the dendrogram
     """
     palette = Palette().getPallete(palette_name, path="../../../palettes/")
-    title_font, axis_font, ticks_font = create_font_setting(font_size)
+    _, axis_font, ticks_font = create_font_setting(font_size)
     if cluster_colors:
         set_link_color_palette(palette.color_lst[::-1])
 
@@ -88,10 +90,13 @@ def dendro(ax, dist, cut=None,
 
     # Get color-coded clusters
     color_cluster = {col: cluster for cluster, col in enumerate(cluster_colors)}
+    col_lst = den['color_list'][:] + [den['color_list'][-1]]
+    for i, col in enumerate(col_lst):
+        if col == "grey":
+            col_lst[i] = col_lst[i-1]
     clusters = [[row[1]] for row in
                 sorted(zip(den['leaves'],
-                           [color_cluster[col] for col in
-                            den['color_list'][:-2]]),
+                           [color_cluster[col] for col in col_lst]),
                        key=lambda x: x[0])]
 
     # Color the labels by target if applicable
@@ -115,7 +120,7 @@ def dendro(ax, dist, cut=None,
                         prop=axis_font)
         for i, text in enumerate(leg.get_texts()[1:]):
             text.set_color(label_colors[i])
-            text.set_ha('center')
+            text.set_ha('left')
         ax.add_artist(c_leg)
 
     # Plot cut
@@ -130,42 +135,27 @@ def dendro(ax, dist, cut=None,
     ax.set_yticklabels(ax.get_yticks(), fontproperties=ticks_font)
     ax.tick_params(axis='y', direction='in')
 
-    title, ylab, xlab = labs
-    ax.set_title(title, fontproperties=title_font)
-    ax.set_ylabel(ylab, fontproperties=axis_font)
-    ax.set_xlabel(xlab, fontproperties=axis_font)
+    labelTitleAxis(ax, labs, font_size)
 
     return clusters
 
 
 if __name__ == "__main__":
-    import seaborn as sns
-    from sklearn.preprocessing import StandardScaler
     from scipy.cluster.hierarchy import linkage
     import matplotlib.pyplot as plt
 
     # Sample 50 observations from 'mpg' dataset
-    sample = sns.load_dataset('mpg').sample(50, random_state=123)
-    # Set name of the model as index, and keep the first row for rows with
-    # duplicate index
-    sample = sample.set_index(sample.name.apply(lambda x: x.title())).iloc[:,
-             :-2]
-    sample = sample.loc[sample.index.drop_duplicates(keep=False)]
-    # Drop rows with missing values
-    sample = sample[sample.isnull().sum(axis=1) == 0]
-    target = "cylinders"
-    features = list(set(sample.columns) - {target})
-    scaler = StandardScaler()
-    sample[features] = scaler.fit_transform(sample[features])
+    target_name = "cylinders"
+    features, target = get_mpg(target=target_name)
+    merging = linkage(features, 'ward')
 
-    merging = linkage(sample[features], 'ward')
     fig, ax = plt.subplots(figsize=(13, 7.5), dpi=300)
     clusters = dendro(ax, merging, cut=7,
-                      labels=sample.index,
+                      labels=features.index,
                       root="top", leaf_rotation=90, leaf_font_size=10,
                       sorting="distance", palette_name="LaSalle",
                       cluster_colors=True, label_colors=True,
-                      label_color_map=sample[target], label_title=target,
+                      label_color_map=target, label_title=target_name,
                       labs=(
                           "Clustering on $mpg$ Data Subsample", "Ward Distance",
                           "Car Model"))
