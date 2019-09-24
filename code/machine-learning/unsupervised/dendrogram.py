@@ -89,8 +89,10 @@ def dendro(ax, dist, cut=None,
 
     # Get color-coded clusters
     color_cluster = {col: cluster for cluster, col in enumerate(cluster_colors)}
-    col_lst = [den['color_list'][i-1] if col == "grey" else col
-               for i, col in enumerate(den['color_list'])]
+    col_lst = den['color_list'][:] + [den['color_list'][-1]]
+    for i, col in enumerate(col_lst):
+        if col == "grey":
+            col_lst[i] = col_lst[i-1]
     clusters = [[row[1]] for row in
                 sorted(zip(den['leaves'],
                            [color_cluster[col] for col in col_lst]),
