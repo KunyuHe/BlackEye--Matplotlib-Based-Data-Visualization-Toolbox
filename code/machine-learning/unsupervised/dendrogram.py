@@ -4,6 +4,7 @@ sys.path.append("../../")
 
 from palette import Palette
 from utils import create_font_setting
+from data import get_mpg
 from title_axislabels import labelTitleAxis
 from scipy.cluster.hierarchy import dendrogram, set_link_color_palette
 from matplotlib.lines import Line2D
@@ -146,27 +147,17 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     # Sample 50 observations from 'mpg' dataset
-    sample = sns.load_dataset('mpg').sample(50, random_state=123)
-    # Set name of the model as index, and keep the first row for rows with
-    # duplicate index
-    sample = sample.set_index(sample.name.apply(lambda x: x.title())).iloc[:,
-             :-2]
-    sample = sample.loc[sample.index.drop_duplicates(keep=False)]
-    # Drop rows with missing values
-    sample = sample[sample.isnull().sum(axis=1) == 0]
-    target = "cylinders"
-    features = list(set(sample.columns) - {target})
-    scaler = StandardScaler()
-    sample[features] = scaler.fit_transform(sample[features])
+    target_name = "cylinders"
+    features, target = get_mpg(target=target_name)
+    merging = linkage(features, 'ward')
 
-    merging = linkage(sample[features], 'ward')
     fig, ax = plt.subplots(figsize=(13, 7.5), dpi=300)
     clusters = dendro(ax, merging, cut=7,
-                      labels=sample.index,
+                      labels=features.index,
                       root="top", leaf_rotation=90, leaf_font_size=10,
                       sorting="distance", palette_name="LaSalle",
                       cluster_colors=True, label_colors=True,
-                      label_color_map=sample[target], label_title=target,
+                      label_color_map=target, label_title=target_name,
                       labs=(
                           "Clustering on $mpg$ Data Subsample", "Ward Distance",
                           "Car Model"))
