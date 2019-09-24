@@ -17,3 +17,17 @@ Data science professionals who use Python day-to-day might be good at explorator
 
 In short, **`DarkEyes` is a `Matplotlib`-based visualization toolbox that serves to simplify the production and help enhance the quality of presentation-ready data visualizations in EDA and machine learning processes for applied data science professionals who are not familiar with the object-oriented API of `Matplotlib`.**
 
+## User's Guide
+
+  
+
+### 1. Installing
+
+
+
+### 2. Use Cases
+
+| Name       | Type                            | Short Description                                            | Features                                                     |
+| ---------- | ------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Dendrogram | Machine Learning (Unsupervised) | Dendrogram serves to show the results of hierarchical clustering. It illustrates the arrangement of the clusters visually. | Text labels colored by target variable if applicable; Return clusters as colored |
+
