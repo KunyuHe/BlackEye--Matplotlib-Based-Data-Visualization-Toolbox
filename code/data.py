@@ -4,12 +4,12 @@ from sklearn.preprocessing import StandardScaler
 def get_mpg(target=None, scale=True):
     """
     Get and preprocess `mpg` dataset from `seaborn`. Sample 50 observations,
-    extract features and target, scale features and return both as DataFrame.
+    extract features and target, scale features and return both.
     Inputs:
         - target (str): name of the target variable
         - scale (bool): whether to scale the feature matrix
     Returns:
-        ((DataFrame, DataFrame)): feature and target both as DataFrames
+        ((DataFrame, DataSeries)): feature and target
     """
     # Sample 50 observations from 'mpg' dataset
     sample = sns.load_dataset('mpg').sample(50, random_state=123)
@@ -30,4 +30,4 @@ def get_mpg(target=None, scale=True):
         scaler = StandardScaler()
         sample[features] = scaler.fit_transform(sample[features])
 
-    return sample[features], sample[[target]]
+    return sample[features], sample[target]
