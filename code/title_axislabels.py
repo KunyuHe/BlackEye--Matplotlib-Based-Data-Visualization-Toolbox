@@ -2,7 +2,6 @@ from utils import create_font_setting
 
 def labelTitleAxis(ax, labs, font_size, fig=None):
     """
-    
     :param ax:
     :param labs:
     :param font_size:
@@ -10,7 +9,7 @@ def labelTitleAxis(ax, labs, font_size, fig=None):
     :return:
     """
     title, ylab, xlab = labs
-    title_font, axis_font, ticks_font = create_font_setting(font_size)
+    title_font, axis_font, _ = create_font_setting(font_size)
 
     # Axis-labels
     ax.set_ylabel(ylab, fontproperties=axis_font)
