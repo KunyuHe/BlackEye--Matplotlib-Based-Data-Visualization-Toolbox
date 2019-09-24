@@ -57,7 +57,7 @@ def dendro(ax, dist, cut=None,
         ([[int]]) cluster output as color-coded by the dendrogram
     """
     palette = Palette().getPallete(palette_name, path="../../../palettes/")
-    title_font, axis_font, ticks_font = create_font_setting(font_size)
+    _, axis_font, ticks_font = create_font_setting(font_size)
     if cluster_colors:
         set_link_color_palette(palette.color_lst[::-1])
 
@@ -141,8 +141,6 @@ def dendro(ax, dist, cut=None,
 
 
 if __name__ == "__main__":
-    import seaborn as sns
-    from sklearn.preprocessing import StandardScaler
     from scipy.cluster.hierarchy import linkage
     import matplotlib.pyplot as plt
 
