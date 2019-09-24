@@ -27,7 +27,10 @@ def get_mpg(target=None, scale=True):
         features = list(sample.columns)
 
     if scale:
+        sample = sample.astype(float)
         scaler = StandardScaler()
         sample[features] = scaler.fit_transform(sample[features])
 
-    return sample[features], sample[target]
+    if target:
+        return sample[features], sample[target]
+    return sample
